@@ -81,16 +81,13 @@ app.put("/libros/:id", async (req, res) => {
 });
 
 //eliminar libro
-app.put("/libros/:id", async (req, res) => {
+app.delete("/libros/:id", async (req, res) => {
   try {
     let id = req.params.id;
-    const libro = await Libro.findByIdAndDelete(
-      id,
-      { titulo: req.body.titulo, autor: req.body.autor },
-      { new: true }
-    );
+    const libro = await Libro.findByIdAndDelete(id);
     if (libro) {
-      res.json(libro);
+      res.status(204).send("Libro eliminado");
+     
     } else {
       res.status(404).send("Libro no eliminado");
     }
@@ -101,6 +98,20 @@ app.put("/libros/:id", async (req, res) => {
 
 
 //consultar por id
+
+app.get("/libros/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    const libro = await Libro.findById(id);
+    if (libro) {
+      res.status(200).json(libro);
+    } else {
+      res.status(404).send("Libro no encontrado");
+    }
+  } catch (error) {
+    res.status(500).send("Error al consultar el libro", error);
+  }
+});
 
 
 app.listen(3000, () => {
